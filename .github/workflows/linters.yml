@@ -23,7 +23,7 @@ jobs:
         dockerfile: Dockerfile
         config: .github/configs/hadolint.yaml
         format: tty
-        failure-threshold: warning
+        failure-threshold: error
 
     - name: "scan: ./Dockerfile hadolint scan sarif output"
       if: always()
@@ -34,4 +34,4 @@ jobs:
         format: sarif
         output-file: ${{ env.HADOLINT_RESULTS_FILE }}
         verbose: true 
-        failure-threshold: warning
+        failure-threshold: error 
