@@ -17,7 +17,14 @@ jobs:
     - name: "setup: checkout repo"    
       uses: actions/checkout@v3
 
-    - name: "scan: ./Dockerfile hadolint scan"
+    - name: "scan: ./Dockerfile hadolint scan stty output"
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: Dockerfile
+        config: .github/configs/hadolint.yaml
+        failure-threshold: warning
+
+    - name: "scan: ./Dockerfile hadolint scan sarif output"
       uses: hadolint/hadolint-action@v3.1.0
       with:
         dockerfile: Dockerfile
@@ -26,9 +33,3 @@ jobs:
         output-file: ${{ env.HADOLINT_RESULTS_FILE }}
         verbose: true 
         failure-threshold: warning
-
-    - name: "post: Upload results to security tab"
-      uses: github/codeql-action/upload-sarif@2e230e8fe0ad3a14a340ad0815ddb96d599d2aff # v3.25.8
-      if: always()
-      with:
-        sarif_file: ${{ env.HADOLINT_RESULTS_FILE }}
