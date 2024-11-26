@@ -17,13 +17,6 @@ jobs:
     - name: "setup: checkout repo"    
       uses: actions/checkout@v3
 
-    - name: "scan: ./Dockerfile hadolint scan stty output"
-      uses: hadolint/hadolint-action@v3.1.0
-      with:
-        dockerfile: Dockerfile
-        config: .github/configs/hadolint.yaml
-        failure-threshold: warning
-
     - name: "scan: ./Dockerfile hadolint scan sarif output"
       if: always()
       uses: hadolint/hadolint-action@v3.1.0
