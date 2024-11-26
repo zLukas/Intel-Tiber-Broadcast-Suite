@@ -22,8 +22,8 @@ jobs:
       with:
         dockerfile: Dockerfile
         config: .github/configs/hadolint.yaml
-        format: tty
-        #output-file: ${{ env.HADOLINT_RESULTS_FILE }}
+        format: sarif
+        output-file: ${{ env.HADOLINT_RESULTS_FILE }}
         verbose: true 
         failure-threshold: warning
 
