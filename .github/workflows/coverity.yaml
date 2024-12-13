@@ -1,9 +1,10 @@
 name: Coverity scan 
 on:
+  push:
   workflow_dispatch:
     inputs:
       branch:
-        required: false
+        required: true
         default: main
 env:
   BUILD_TYPE: "Release"
