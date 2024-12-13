@@ -2,25 +2,25 @@ from pprint import pprint
 from dockerfile_parse import DockerfileParser
 import json
 
-dp = DockerfileParser(path="Dockerfile")
+CMD_OFFSET=10
 builds= []
-
 invalid_dirs=[
     "/tmp/svt-av1/Build",
     "/tmp/vulkan-headers",
     "/tmp/dpdk",
-    ]
+]
 
-CMD_OFFSET=10
+dp = DockerfileParser(path="Dockerfile")
+
 WORKDIR_CMD_LIST = list(filter(lambda s: s['instruction'] == "WORKDIR", dp.structure))
 RUN_CMD_LIST= list(filter(lambda s: s['instruction'] == "RUN", dp.structure))
-build_dict = {}
-for _dir in WORKDIR_CMD_LIST:
+for workdir in WORKDIR_CMD_LIST:
   for cmd in RUN_CMD_LIST:
-    if cmd['startline'] > _dir["endline"] and cmd['startline'] < (_dir["endline"] + CMD_OFFSET):
-      if  "BUILD" in cmd["content"] and _dir["value"] not in invalid_dirs:
+    # find nearest next RUN command
+    if cmd['startline'] > workdir["endline"] and cmd['startline'] < (workdir["endline"] + CMD_OFFSET):
+      if  "BUILD" in cmd["content"] and workdir["value"] not in invalid_dirs:
         builds.append({
-          "dir": _dir["value"],
+          "dir": workdir["value"],
           "cmd": cmd["value"]
         })
 
