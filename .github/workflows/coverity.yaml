@@ -62,7 +62,7 @@ jobs:
         cache-to: type=local,dest=/tmp/.buildx-cache
   coverity-scans:
     name: "coverity scans for Intel® Tiber™ Broadcast Suite"
-    needs: build
+    needs: prepare-docker-image
     runs-on: ubuntu-latest
     container:
       image: build-image:0.1
