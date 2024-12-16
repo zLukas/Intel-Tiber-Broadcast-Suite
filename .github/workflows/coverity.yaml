@@ -1,6 +1,5 @@
 name: Coverity scan 
 on:
-  push:
   workflow_dispatch:
     inputs:
       branch:
@@ -11,6 +10,9 @@ env:
   DOCKER_IMAGE_NAME: "ghcr.io/openvisualcloud/intel-tiber-broadcast-suite/tiber-broadcast-suite-build"
   DOCKER_IMAGE_TAG: "${{ github.sha }}"
   DEBIAN_FRONTEND: "noninteractive"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_dispatch || github.sha }}
+  cancel-in-progress: true
 jobs:
   prepare-docker-image:
     name: "Dockerfile build for Intel® Tiber™ Broadcast Suite"
@@ -24,11 +26,6 @@ jobs:
       uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
       with:
         egress-policy: audit
-
-    - name: "Memory and swap report before"
-      run: |
-        sudo free -h
-        sudo lsblk
 
     - name: "Set swap to 30Gi"
       shell: bash
@@ -57,7 +54,7 @@ jobs:
       with:
         file: Dockerfile
         context: .
-        push: false
+        push: true
         load: true
         target: build-stage
         tags: "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}"
