@@ -54,19 +54,9 @@ jobs:
       with:
         file: Dockerfile
         context: .
-        push: false
+        push: true
         load: true
         target: build-stage
-        tags: build-image:0.1
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
-  coverity-scans:
-    name: "coverity scans for Intel® Tiber™ Broadcast Suite"
-    needs: prepare-docker-image
-    runs-on: ubuntu-latest
-    container:
-      image: build-image:0.1
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
+        tags: "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}"
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
