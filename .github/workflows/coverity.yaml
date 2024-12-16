@@ -57,7 +57,7 @@ jobs:
         push: false
         load: true
         target: build-stage
-        tags: "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}"
+        tags: build-image:0.1
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
   coverity-scans:
@@ -65,7 +65,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}"
+      image: build-image:0.1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
