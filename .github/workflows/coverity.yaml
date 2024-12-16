@@ -12,7 +12,7 @@ env:
   DOCKER_IMAGE_TAG: "${{ github.sha }}"
   DEBIAN_FRONTEND: "noninteractive"
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.workflow_dispatch || github.sha }}
+  group: ${{ github.workflow }}-${{ github.event.push || github.sha }}
   cancel-in-progress: true
 jobs:
   prepare-docker-image:
@@ -57,7 +57,7 @@ jobs:
       with:
         file: Dockerfile
         context: .
-        push: true
+        push: false
         load: false
         target: build-stage
         tags: "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}"
