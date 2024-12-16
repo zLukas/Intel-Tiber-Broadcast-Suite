@@ -7,7 +7,7 @@ on:
         default: main
 env:
   BUILD_TYPE: "Release"
-  DOCKER_IMAGE_NAME: "ghcr.io/openvisualcloud/intel-tiber-broadcast-suite/tiber-broadcast-suite-build"
+  DOCKER_IMAGE_NAME: "ghcr.io/zlukas/intel-tiber-broadcast-suite/tiber-broadcast-suite-build"
   DOCKER_IMAGE_TAG: "${{ github.sha }}"
   DEBIAN_FRONTEND: "noninteractive"
 concurrency:
@@ -54,7 +54,19 @@ jobs:
       with:
         file: Dockerfile
         context: .
-        push: true
+        push: false
         load: true
         target: build-stage
         tags: "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}"
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
+  coverity-scans:
+    name: "coverity scans for Intel® Tiber™ Broadcast Suite"
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: "${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
